@@ -18,7 +18,46 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(express.json());
+app.use(express.json({ limit: '20kb' }));
+
+// Basic API abuse protection backed by Upstash (per IP and endpoint).
+// This slows automated bulk requests; it cannot hide code already sent to a browser.
+const apiLimits = new Map();
+async function rateLimit(req, res, next) {
+  if (!['/api/send-link', '/api/verify-link'].includes(req.path)) return next();
+  const ip = (req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown').toString().split(',')[0].trim().slice(0, 80);
+  const route = req.path.replace(/[^a-z0-9]/gi, '_');
+  const key = `xra:ratelimit:${route}:${crypto.createHash('sha256').update(ip).digest('hex').slice(0, 24)}`;
+  const url = process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+  try {
+    if (url && token) {
+      const base = url.replace(/\/+$/, '');
+      const headers = { Authorization: `Bearer ${token}` };
+      const r = await fetch(`${base}/incr/${encodeURIComponent(key)}`, { headers, cache: 'no-store' });
+      if (!r.ok) throw new Error('rate-limit store unavailable');
+      const data = await r.json();
+      const count = Number(data.result || 0);
+      if (count === 1) await fetch(`${base}/expire/${encodeURIComponent(key)}/60`, { headers, cache: 'no-store' });
+      const limit = req.path === '/api/send-link' ? 5 : 10;
+      if (count > limit) return res.status(429).json({ success: false, error: 'Terlalu banyak permintaan. Coba lagi dalam satu menit.' });
+    } else {
+      const now = Date.now();
+      const old = apiLimits.get(key);
+      const count = !old || now - old.start > 60000 ? 1 : old.count + 1;
+      apiLimits.set(key, { start: !old || now - old.start > 60000 ? now : old.start, count });
+      if (count > (req.path === '/api/send-link' ? 5 : 10)) return res.status(429).json({ success: false, error: 'Terlalu banyak permintaan. Coba lagi dalam satu menit.' });
+    }
+  } catch (e) {
+    // If the limiter is down, use the local fallback above instead of blocking all users.
+    const now = Date.now(), old = apiLimits.get(key);
+    const count = !old || now - old.start > 60000 ? 1 : old.count + 1;
+    apiLimits.set(key, { start: !old || now - old.start > 60000 ? now : old.start, count });
+    if (count > 5) return res.status(429).json({ success: false, error: 'Terlalu banyak permintaan. Coba lagi nanti.' });
+  }
+  next();
+}
+app.use(rateLimit);
 
 function verifyAdminCookie(req) {
   const secret = process.env.ADMIN_PASSWORD;
@@ -267,7 +306,7 @@ app.get('/api/health', (req, res) => {
     success: true,
     service: 'xDonzAm Send & Verify',
     creator: 'xDonzCode',
-    maintenance: false,
+    maintenance: undefined,
     uptime: process.uptime(),
     timestamp: new Date().toISOString()
   });
