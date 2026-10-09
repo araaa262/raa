@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maintenance — xRaaAm</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0f172a">
+<link rel="icon" type="image/jpeg" href="https://files.catbox.moe/yc9nvz.jpg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --white: #ffffff;
+  --blue-50: #eff6ff;
+  --blue-100: #dbeafe;
+  --blue-200: #bfdbfe;
+  --blue-400: #60a5fa;
+  --blue-500: #3b82f6;
+  --blue-600: #2563eb;
+  --ink-900: #0f172a;
+  --ink-700: #334155;
+  --ink-500: #64748b;
+  --ink-400: #94a3b8;
+  --ink-300: #cbd5e1;
+  --ink-100: #f1f5f9;
+  --dark: #011522;
+  --green: #00ca4e;
+  --red: #ff605c;
+  --yellow: #ffbd44;
+  --shadow-cartoon: 6px 6px 0 0 var(--ink-900);
+}
+
+html, body { height: 100%; }
+
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background:
+    radial-gradient(circle at 10% 10%, var(--blue-50) 0%, transparent 40%),
+    radial-gradient(circle at 90% 90%, var(--blue-100) 0%, transparent 40%),
+    #f8fafc;
+  color: var(--ink-900);
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+.cloud-layer { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: -1; }
+.cloud { position: absolute; width: 170px; height: 48px; border-radius: 999px; background: rgba(255,255,255,.76); filter: drop-shadow(0 10px 16px rgba(59,130,246,.10)); animation: cloudFloat 24s ease-in-out infinite alternate; }
+.cloud::before, .cloud::after { content: ""; position: absolute; bottom: 12px; border-radius: 50%; background: inherit; }
+.cloud::before { width: 66px; height: 66px; left: 26px; }
+.cloud::after { width: 84px; height: 84px; left: 68px; bottom: 8px; }
+.cloud.one { top: 12%; left: -45px; }
+.cloud.two { top: 25%; right: -55px; transform: scale(.8); animation-delay: -8s; }
+.cloud.three { bottom: 8%; left: 10%; transform: scale(.65); animation-delay: -13s; }
+@keyframes cloudFloat { from { translate: -8px 0; } to { translate: 36px 14px; } }
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(var(--blue-200) 1px, transparent 1px);
+  background-size: 22px 22px;
+  opacity: 0.35;
+  z-index: -1;
+  animation: bgDrift 30s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes bgDrift {
+  0%   { background-position: 0 0; }
+  100% { background-position: 220px 220px; }
+}
+
+.wrap {
+  width: min(520px, 100%);
+  opacity: 0;
+  transform: translateY(24px);
+  animation: reveal 0.9s cubic-bezier(0.34, 1.4, 0.64, 1) 0.15s forwards;
+}
+
+@keyframes reveal { to { opacity: 1; transform: translateY(0); } }
+
+.card {
+  background: var(--white);
+  border: 2px solid var(--ink-900);
+  box-shadow: var(--shadow-cartoon);
+  overflow: hidden;
+}
+
+.term-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--dark);
+  border-bottom: 2px solid var(--ink-900);
+  min-height: 40px;
+}
+
+.term-dot {
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.25);
+}
+.term-dot.red    { background: var(--red); }
+.term-dot.yellow { background: var(--yellow); }
+.term-dot.green  { background: var(--green); }
+
+.term-title {
+  flex: 1;
+  text-align: center;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  font-weight: 500;
+  color: rgba(148,163,184,0.85);
+  letter-spacing: 0.6px;
+  padding-right: 45px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.body {
+  padding: 32px 24px 28px;
+  text-align: center;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border: 2px solid var(--ink-900);
+  background: var(--yellow);
+  color: var(--ink-900);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  box-shadow: 2px 2px 0 var(--ink-900);
+  margin-bottom: 16px;
+}
+
+.icon-wrap {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 3px dashed var(--blue-400);
+  animation: spinRing 8s linear infinite;
+}
+
+@keyframes spinRing { to { transform: rotate(360deg); } }
+
+.icon-core {
+  width: 72px;
+  height: 72px;
+  border: 2px solid var(--ink-900);
+  background: linear-gradient(135deg, var(--blue-500) 0%, var(--blue-600) 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  box-shadow: 4px 4px 0 var(--ink-900);
+  animation: pulseCore 2.5s ease-in-out infinite;
+  z-index: 1;
+}
+
+@keyframes pulseCore {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50%      { transform: scale(1.06) rotate(-3deg); }
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--ink-900);
+  margin-bottom: 8px;
+}
+
+.title span { color: var(--blue-600); }
+
+.subtitle {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--ink-500);
+  line-height: 1.6;
+  margin-bottom: 22px;
+  padding: 0 8px;
+}
+
+.subtitle b { color: var(--ink-900); font-weight: 700; }
+
+.status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 14px;
+  border: 2px solid var(--ink-900);
+  background: var(--blue-50);
+  box-shadow: 3px 3px 0 var(--ink-900);
+  margin-bottom: 22px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-900);
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--yellow);
+  box-shadow: 0 0 0 3px rgba(255, 189, 68, 0.3);
+  animation: blink 1.4s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.4; transform: scale(0.85); }
+}
+
+/* LOADING BAR (indeterminate) */
+.loading-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--ink-100);
+  border: 2px solid var(--ink-900);
+  box-shadow: 3px 3px 0 var(--ink-900);
+  overflow: hidden;
+  margin-bottom: 22px;
+  position: relative;
+}
+
+.loading-bar-fill {
+  height: 100%;
+  width: 40%;
+  background: linear-gradient(90deg, var(--blue-400), var(--blue-600));
+  position: absolute;
+  top: 0;
+  left: 0;
+  animation: slideBar 1.8s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  border-radius: 2px;
+}
+
+@keyframes slideBar {
+  0%   { left: -40%; }
+  100% { left: 100%; }
+}
+
+.divider {
+  border-top: 2px dashed var(--ink-300);
+  margin: 0 0 20px;
+}
+
+.social-title {
+  font-size: 9px;
+  font-weight: 800;
+  color: var(--ink-500);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.social-grid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.social-btn {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--ink-900);
+  background: var(--white);
+  color: var(--ink-900);
+  text-decoration: none;
+  font-size: 17px;
+  box-shadow: 3px 3px 0 var(--ink-900);
+  transition: all 0.2s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+.social-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 var(--ink-900);
+  color: #fff;
+}
+
+.social-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--ink-900);
+}
+
+.social-btn i { transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.social-btn:hover i { transform: scale(1.15) rotate(-6deg); }
+
+.social-btn.github:hover   { background: #24292e; }
+.social-btn.telegram:hover { background: #229ED9; }
+.social-btn.tiktok:hover   { background: #000000; }
+.social-btn.whatsapp:hover { background: #25D366; }
+
+.footer {
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 2px dashed var(--ink-300);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--ink-500);
+  letter-spacing: 0.3px;
+}
+
+.footer i { color: var(--blue-600); margin-right: 5px; }
+.footer span { color: var(--blue-600); font-weight: 800; }
+
+@media (max-width: 480px) {
+  body { padding: 14px; }
+  .body { padding: 24px 16px 22px; }
+  .title { font-size: 19px; }
+  .subtitle { font-size: 11.5px; }
+  .icon-wrap { width: 84px; height: 84px; }
+  .icon-core { width: 64px; height: 64px; font-size: 26px; }
+  .social-btn { width: 40px; height: 40px; font-size: 15px; }
+}
+</style>
+</head>
+
+<body>
+<div class="cloud-layer" aria-hidden="true"><span class="cloud one"></span><span class="cloud two"></span><span class="cloud three"></span></div>
+
+<div class="wrap">
+  <div class="card">
+    <div class="term-head">
+      <span class="term-dot red"></span>
+      <span class="term-dot yellow"></span>
+      <span class="term-dot green"></span>
+      <span class="term-title">system — maintenance mode</span>
+    </div>
+
+    <div class="body">
+      <div class="badge">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        Maintenance
+      </div>
+
+      <div class="icon-wrap">
+        <div class="icon-ring"></div>
+        <div class="icon-core">
+          <i class="fa-solid fa-screwdriver-wrench"></i>
+        </div>
+      </div>
+
+      <div class="title">
+        Sedang <span>Maintenance</span>
+      </div>
+
+      <div class="subtitle">
+        Server <b>xRaaAm</b> sedang dalam perbaikan untuk meningkatkan kualitas layanan. Mohon tunggu sebentar ya, kami akan segera kembali!
+      </div>
+
+      <div class="status">
+        <span class="status-dot"></span>
+        <span id="statusText">SYSTEM UPGRADING...</span>
+      </div>
+
+      <div class="loading-bar">
+        <div class="loading-bar-fill"></div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="social-title">
+        <i class="fa-solid fa-share-nodes"></i> Stay Connected
+      </div>
+
+      <div class="social-grid">
+        <a class="social-btn github" href="https://github.com/Rassya" target="_blank" rel="noopener" title="GitHub">
+          <i class="fa-brands fa-github"></i>
+        </a>
+        <a class="social-btn telegram" href="https://t.me/Rassya" target="_blank" rel="noopener" title="Telegram">
+          <i class="fa-brands fa-telegram"></i>
+        </a>
+        <a class="social-btn tiktok" href="https://tiktok.com/@ancklo" target="_blank" rel="noopener" title="TikTok">
+          <i class="fa-brands fa-tiktok"></i>
+        </a>
+        <a class="social-btn whatsapp" href="https://whatsapp.com/channel/0029VbDPWOjFMqrdmBdXu82R" target="_blank" rel="noopener" title="WhatsApp Channel">
+          <i class="fa-brands fa-whatsapp"></i>
+        </a>
+      </div>
+
+      <div class="footer">
+        <i class="fa-solid fa-code"></i>
+        Powered by <span>Rassya</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const messages = [
+  "SYSTEM UPGRADING...",
+  "OPTIMIZING SERVER...",
+  "PATCHING BUGS...",
+  "ENHANCING FEATURES...",
+  "ALMOST READY..."
+];
+
+let msgIndex = 0;
+const statusText = document.getElementById("statusText");
+
+setInterval(() => {
+  msgIndex = (msgIndex + 1) % messages.length;
+  statusText.textContent = messages[msgIndex];
+}, 3000);
+</script>
+
+</body>
+</html>
