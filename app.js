@@ -20,11 +20,6 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json({ limit: '20kb' }));
 
-// Google Search Console HTML file verification (must be reachable at the domain root).
-app.get('/google53ad5cb1fed4e5e3.html', (req, res) => {
-  res.status(200).type('text/plain').send('google-site-verification: google53ad5cb1fed4e5e3.html');
-});
-
 // Basic API abuse protection backed by Upstash (per IP and endpoint).
 // This slows automated bulk requests; it cannot hide code already sent to a browser.
 const apiLimits = new Map();

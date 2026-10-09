@@ -5,11 +5,12 @@ const BLOCKED_UA =
   /(httrack|wget|curl|python-requests|scrapy|aiohttp|webcopier|site.?sucker|teleport|webzip|phantomjs)/i;
 
 const TRUSTED_BOTS =
-  /(googlebot|bingbot|duckduckbot|facebookexternalhit|twitterbot|telegrambot|discordbot|whatsapp)/i;
+  /(googlebot|google-inspectiontool|bingbot|duckduckbot|facebookexternalhit|twitterbot|telegrambot|discordbot|whatsapp)/i;
 
 export const config = {
   matcher: [
-    "/((?!_vercel|favicon.ico|robots.txt).*)",
+    "/((?!_vercel|favicon.ico|robots.txt|sitemap.xml|google53ad5cb1fed4e5e3\\.html).*)",
+  ],
 };
 
 function denyBot() {
@@ -143,8 +144,12 @@ export default function middleware(request) {
     return denyBot();
   }
 
+  // Search crawlers and public verification files must not be blocked by the browser challenge.
   if (TRUSTED_BOTS.test(ua)) {
-    return denyBot();
+    return;
+  }
+  if (url.pathname === "/sitemap.xml" || url.pathname === "/robots.txt" || url.pathname === "/google53ad5cb1fed4e5e3.html") {
+    return;
   }
 
   if (cookie.includes(COOKIE_NAME + "=1")) {

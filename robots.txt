@@ -1,5 +1,3 @@
 
 User-agent: *
 Allow: /
-
-Sitemap: https://www.rasyaaa.web.id/sitemap.xml
