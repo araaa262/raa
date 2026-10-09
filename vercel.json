@@ -1,11 +1,21 @@
 {
   "version": 2,
   "functions": {
-    "api/maintenance.js": { "maxDuration": 10 },
-    "api/site.js": { "maxDuration": 30 }
+    "api/maintenance.js": {
+      "maxDuration": 10
+    },
+    "api/site.js": {
+      "maxDuration": 30
+    }
   },
   "routes": [
-    { "src": "^/api/maintenance$", "dest": "/api/maintenance.js" },
-    { "src": "^/(.*)$", "dest": "/api/site.js?path=$1" }
+    {
+      "src": "^/api/maintenance$",
+      "dest": "/api/maintenance.js"
+    },
+    {
+      "src": "^/(.*)$",
+      "dest": "/api/site.js?path=$1"
+    }
   ]
 }
