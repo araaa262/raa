@@ -1,21 +1,9 @@
+
 {
-  "version": 2,
-  "functions": {
-    "api/maintenance.js": {
-      "maxDuration": 10
-    },
-    "api/site.js": {
-      "maxDuration": 30
-    }
-  },
-  "routes": [
+  "rewrites": [
     {
-      "src": "^/api/maintenance$",
-      "dest": "/api/maintenance.js"
-    },
-    {
-      "src": "^/(.*)$",
-      "dest": "/api/site.js?path=$1"
+      "source": "/((?!sitemap\\.xml|robots\\.txt|google53ad5cb1fed4e5e3\\.html).*)",
+      "destination": "/"
     }
   ]
 }
